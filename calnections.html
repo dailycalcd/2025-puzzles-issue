@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Connections Puzzle Demo</title>
+  <title>Cal-nections Puzzle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     :root {
@@ -90,10 +90,10 @@
       font-size: 0.8rem;
       opacity: 0.9;
     }
-    .group-color-0 { background: #065f46; } /* green */
-    .group-color-1 { background: #92400e; } /* yellow/orange */
-    .group-color-2 { background: #1d4ed8; } /* blue */
-    .group-color-3 { background: #7c2d12; } /* purple/brown */
+    .group-color-0 { background: #98c021; } /* green */
+    .group-color-1 { background: #f7d83b; } /* yellow */
+    .group-color-2 { background: #07bbc9; } /* blue */
+    .group-color-3 { background: #a269c6; } /* purple */
 
     .button-row {
       display: flex;
@@ -144,8 +144,8 @@
 </head>
 <body>
   <div class="game-container">
-    <h1>Connections</h1>
-    <div class="subtitle">Find the four groups of related words (4 words each).</div>
+    <h1>Cal-nections</h1>
+    <div class="subtitle">Create groups of four.</div>
     <div class="status-bar">
       <div>Groups solved: <span id="groups-solved">0</span>/4</div>
       <div class="strikes">Strikes: <span id="strikes">0</span>/4</div>
@@ -164,20 +164,20 @@
     // Four groups, each with a category and 4 words.
     const PUZZLE = [
       {
-        category: "Musical Instruments",
-        words: ["DRUM", "FLUTE", "PIANO", "VIOLIN"]
+        category: "Speed",
+        words: ["HASTE", "FAST", "SWIFT", "RAPID"]
       },
       {
-        category: "Types of Trees",
-        words: ["MAPLE", "OAK", "BIRCH", "PINE"]
+        category: "Communication",
+        words: ["TELEGRAPH", "EMAIL", "RADIO", "PHONE"]
       },
       {
-        category: "Programming Languages",
-        words: ["PYTHON", "RUBY", "JAVA", "SWIFT"]
+        category: "She's the Man Cast",
+        words: ["CHANNING", "AMANDA", "ROBERT", "LAURA"]
       },
       {
-        category: "Board Games",
-        words: ["MONOPOLY", "CLUE", "RISK", "SORRY"]
+        category: "Beginning with math operations",
+        words: ["ADDISON", "DIVERGENT", "MULTIMEDIA", "SUBSTACK"]
       }
     ];
 
@@ -303,7 +303,7 @@
     });
 
     renderGrid();
-    setMessage("Select four words you think belong together.", "info");
+    setMessage("Select four words you think belong together", "info");
   </script>
 </body>
 </html>
