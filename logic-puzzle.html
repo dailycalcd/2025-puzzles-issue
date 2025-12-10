@@ -160,6 +160,23 @@
     ol.clues li {
       margin-bottom: 6px;
     }
+    /* Vertical thicker lines for category blocks:
+   - before Species, before Time, before Snack */
+    .logic-table th:nth-child(3),
+    .logic-table td:nth-child(3),
+    .logic-table th:nth-child(7),
+    .logic-table td:nth-child(7),
+    .logic-table th:nth-child(11),
+    .logic-table td:nth-child(11) {
+      border-left-width: 2px;
+    }
+    /* Horizontal thicker lines where Name→Snack and Snack→Time blocks begin */
+    .logic-table tbody tr:nth-child(5) th,
+    .logic-table tbody tr:nth-child(5) td,
+    .logic-table tbody tr:nth-child(9) th,
+    .logic-table tbody tr:nth-child(9) td {
+      border-top-width: 2px;
+    }
   </style>
 </head>
 <body>
