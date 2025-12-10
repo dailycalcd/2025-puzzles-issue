@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Logic Puzzle – Fish Tank</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 16px;
+      background: #f3f4f6;
+      display: flex;
+      justify-content: center;
+    }
+    .game-container {
+      max-width: 900px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      box-sizing: border-box;
+    }
+    h1 {
+      font-size: 1.6rem;
+      margin: 0 0 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+    .byline {
+      font-size: 0.8rem;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .legend {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-bottom: 10px;
+    }
+
+    /* Layout: grid on left, clues on right */
+    .logic-layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .grid-area {
+      flex: 1 1 480px;
+      min-width: 0;
+    }
+    .clue-area {
+      flex: 0 0 260px;
+      max-width: 260px;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 800px) {
+      .clue-area {
+        flex: 1 1 100%;
+        max-width: none;
+      }
+    }
+
+    /* Sub-grids for each pair of categories */
+    .subgrid {
+      margin-bottom: 12px;
+      border: 2px solid #111827;
+    }
+    .subgrid-header {
+      background: #a3d147;
+      color: #111827;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 6px;
+    }
+
+    table.logic-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      background: #ffffff;
+    }
+    table.logic-table th,
+    table.logic-table td {
+      border: 1px solid #111827;
+      text-align: center;
+      font-size: 0.8rem;
+      padding: 4px;
+      height: 28px;
+      box-sizing: border-box;
+    }
+    table.logic-table th {
+      background: #f3f4f6;
+      font-weight: 600;
+    }
+    .row-label {
+      background: #d9e8a6;
+      font-weight: 600;
+    }
+
+    .logic-cell {
+      cursor: pointer;
+      user-select: none;
+    }
+    .logic-cell:hover {
+      background: #e5f0ff;
+    }
+
+    /* Clues */
+    .clue-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+    }
+    ol.clues {
+      margin: 0;
+      padding-left: 18px;
+    }
+    ol.clues li {
+      margin-bottom: 6px;
+    }
+
+    /* Footer */
+    .footer-note {
+      margin-top: 12px;
+      font-size: 0.7rem;
+      font-style: italic;
+      color: #9ca3af;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>Logic Puzzle</h1>
+    <div class="subtitle">
+      Use the clues to match each fish's <strong>name</strong> with their <strong>species</strong>,
+      <strong>snack</strong>, and <strong>arrival time</strong>.
+    </div>
+    <div class="byline">By Rachel Khoddami · Staff · rkhoddam@dailycal.org</div>
+
+    <div class="legend">
+      Click a cell to cycle between blank → ✓ → ✗. Use ✓ for a definite match and ✗ for
+      impossible combinations.
+    </div>
+
+    <div class="logic-layout">
+      <div class="grid-area" id="grid-area"></div>
+
+      <aside class="clue-area">
+        <div class="clue-title">Clues</div>
+        <ol class="clues" id="clue-list"></ol>
+      </aside>
+    </div>
+
+    <div class="footer-note">
+      Inspired by classic logic puzzles &copy;
+    </div>
+  </div>
+
+  <script>
+    // ====== CONFIG: puzzle content from the print grid ======
+    const PUZZLE = {
+      title: "Logic Puzzle",
+      subtitle: "Use the clues to match each fish's name with their species, snack, and arrival time.",
+      byline: "By Rachel Khoddami · Staff · rkhoddam@dailycal.org",
+      categories: [
+        {
+          id: "name",
+          label: "Name",
+          items: ["Bubbles", "Nemo", "Goldie", "Bruce"]
+        },
+        {
+          id: "species",
+          label: "Species",
+          items: ["Minnow", "Trout", "Stickleback", "Sucker"]
+        },
+        {
+          id: "snack",
+          label: "Snack",
+          items: ["Worms", "Algae", "Insects", "Crumbs"]
+        },
+        {
+          id: "time",
+          label: "Time",
+          items: ["1:07", "1:46", "1:12", "2:01"]
+        }
+      ],
+      // Three pairwise grids (like a typical notebook version)
+      subgrids: [
+        { id: "name-species", rowCat: "name", colCat: "species", title: "Name vs Species" },
+        { id: "name-snack",   rowCat: "name", colCat: "snack",   title: "Name vs Snack" },
+        { id: "name-time",    rowCat: "name", colCat: "time",    title: "Name vs Time" }
+      ],
+      clues: [
+        "The fish that arrived at 1:07 ate crumbs.",
+        "The trout arrived before the minnow.",
+        "Bruce is the stickleback and he ate worms.",
+        "The fish that ate algae arrived last.",
+        "Nemo is not the trout and did not eat insects.",
+        "Bubbles arrived after Goldie but before Nemo.",
+        "The fish that ate insects arrived at 1:46."
+      ]
+    };
+
+    // ====== Apply header text ======
+    document.querySelector("h1").textContent = PUZZLE.title;
+    document.querySelector(".subtitle").textContent = PUZZLE.subtitle;
+    document.querySelector(".byline").textContent = PUZZLE.byline;
+
+    // ====== Render clues ======
+    const clueListEl = document.getElementById("clue-list");
+    PUZZLE.clues.forEach(text => {
+      const li = document.createElement("li");
+      li.textContent = text;
+      clueListEl.appendChild(li);
+    });
+
+    // ====== Render logic grids ======
+    const gridArea = document.getElementById("grid-area");
+
+    function createSubgrid(sub) {
+      const rowCat = PUZZLE.categories.find(c => c.id === sub.rowCat);
+      const colCat = PUZZLE.categories.find(c => c.id === sub.colCat);
+      if (!rowCat || !colCat) return;
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "subgrid";
+
+      const header = document.createElement("div");
+      header.className = "subgrid-header";
+      header.textContent = `${rowCat.label} vs ${colCat.label}`;
+      wrapper.appendChild(header);
+
+      const table = document.createElement("table");
+      table.className = "logic-table";
+
+      const thead = document.createElement("thead");
+      const headRow = document.createElement("tr");
+
+      const corner = document.createElement("th");
+      corner.textContent = "";
+      headRow.appendChild(corner);
+
+      colCat.items.forEach(item => {
+        const th = document.createElement("th");
+        th.textContent = item;
+        headRow.appendChild(th);
+      });
+      thead.appendChild(headRow);
+      table.appendChild(thead);
+
+      const tbody = document.createElement("tbody");
+      rowCat.items.forEach(rowItem => {
+        const tr = document.createElement("tr");
+
+        const rowLabel = document.createElement("td");
+        rowLabel.className = "row-label";
+        rowLabel.textContent = rowItem;
+        tr.appendChild(rowLabel);
+
+        colCat.items.forEach(colItem => {
+          const td = document.createElement("td");
+          td.className = "logic-cell";
+          td.dataset.state = "0"; // 0 = blank, 1 = check, 2 = X
+          td.addEventListener("click", () => cycleCell(td));
+          tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+      });
+
+      table.appendChild(tbody);
+      wrapper.appendChild(table);
+      return wrapper;
+    }
+
+    function cycleCell(td) {
+      let state = Number(td.dataset.state || "0");
+      state = (state + 1) % 3;
+      td.dataset.state = String(state);
+      if (state === 0) {
+        td.textContent = "";
+      } else if (state === 1) {
+        td.textContent = "✓";
+      } else {
+        td.textContent = "✗";
+      }
+    }
+
+    PUZZLE.subgrids.forEach(sub => {
+      const sg = createSubgrid(sub);
+      if (sg) gridArea.appendChild(sg);
+    });
+  </script>
+</body>
+</html>
