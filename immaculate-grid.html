@@ -16,7 +16,7 @@
       justify-content: center;
     }
     .game-container {
-      max-width: 720px;
+      max-width: 720px;           /* shrunk container */
       width: 100%;
       background: #ffffff;
       border-radius: 12px;
@@ -45,15 +45,17 @@
       margin-bottom: 10px;
     }
 
+    /* Center just the grid inside the game container */
     .grid-wrapper {
       overflow-x: auto;
-      max-width: 560px;          /* shrink grid a bit */
-      margin: 0 auto;            /* center grid inside container */
+      max-width: 100%;
     }
 
     .imm-grid {
+      max-width: 560px;           /* controls grid width (and box size) */
+      margin: 0 auto;             /* centers the grid */
       display: grid;
-      grid-template-columns: 72px repeat(3, 1fr);
+      grid-template-columns: 72px repeat(3, 1fr); /* first column = row headers */
       grid-template-rows: 48px repeat(3, auto);
       gap: 8px;
       align-items: stretch;
@@ -65,7 +67,7 @@
     }
 
     .col-header {
-      font-size: 0.9rem;         /* slightly bigger */
+      font-size: 0.9rem;          /* slightly bigger */
       font-weight: 700;
       text-align: center;
       letter-spacing: 0.06em;
@@ -79,17 +81,16 @@
     .row-header {
       writing-mode: vertical-rl;
       text-orientation: mixed;
-      font-size: 0.9rem;
+      font-size: 0.9rem;          /* slightly bigger */
       font-weight: 700;
       text-align: center;
       letter-spacing: 0.08em;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-end;  /* push text closer to the grid */
+      padding-right: 2px;         /* tiny nudge toward the squares */
       text-transform: uppercase;
-    
-      /* flip so the base of the letters faces the grid */
-      transform: rotate(180deg);
+      transform: rotate(180deg);  /* base of letters faces the grid */
       transform-origin: center;
     }
 
@@ -97,14 +98,14 @@
       border-radius: 4px;
       box-sizing: border-box;
       background-clip: padding-box;
-      /* make each box a square based on its width */
       position: relative;
       overflow: hidden;
     }
+    /* square boxes */
     .cell::before {
       content: "";
       display: block;
-      padding-top: 100%;  /* square aspect ratio */
+      padding-top: 100%;
     }
     .cell-inner {
       position: absolute;
