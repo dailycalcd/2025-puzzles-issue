@@ -76,7 +76,7 @@
       width: 100%;
       border-collapse: separate;  /* changed */
       border-spacing: 0;          /* added */
-      table-layout: fixed;
+      table-layout: auto;
     }
     table.logic-table th,
     table.logic-table td {
@@ -115,8 +115,9 @@
       font-weight: 600;
       text-align: left;
       padding: 6px 10px;
-      min-height: 28px;   /* can grow if needed */
-      height: auto;
+      white-space: nowrap;   /* keep the name on one line */
+      min-height: 28px;
+      height: auto;          /* grow as needed vertically */
       box-sizing: border-box;
     }
     
