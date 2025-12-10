@@ -68,7 +68,6 @@
     }
 
     .logic-table-wrapper {
-      border: 2px solid #111827;
       overflow-x: auto;
       background: #ffffff;
     }
@@ -100,6 +99,14 @@
       letter-spacing: 0.06em;
     }
 
+    /* vertical item labels along the top, like the print grid */
+    .top-item {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      padding: 6px 2px;
+      font-weight: 400;
+    }
+
     .side-group {
       background: #a3d147;
       color: #111827;
@@ -125,8 +132,9 @@
       background: #e5f0ff;
     }
 
+    /* “missing” squares that create the stepped shape */
     .inactive-cell {
-      background: #ffffff;
+      background: transparent;
       border: none;
       cursor: default;
     }
@@ -172,22 +180,22 @@
               </tr>
               <tr>
                 <th colspan="2"></th>
-                <th>Minnow</th>
-                <th>Trout</th>
-                <th>Stickleback</th>
-                <th>Sucker</th>
-                <th>1:07</th>
-                <th>1:46</th>
-                <th>1:12</th>
-                <th>2:01</th>
-                <th>Worms</th>
-                <th>Algae</th>
-                <th>Insects</th>
-                <th>Crumbs</th>
+                <th class="top-item">Minnow</th>
+                <th class="top-item">Trout</th>
+                <th class="top-item">Stickleback</th>
+                <th class="top-item">Sucker</th>
+                <th class="top-item">1:07</th>
+                <th class="top-item">1:46</th>
+                <th class="top-item">1:12</th>
+                <th class="top-item">2:01</th>
+                <th class="top-item">Worms</th>
+                <th class="top-item">Algae</th>
+                <th class="top-item">Insects</th>
+                <th class="top-item">Crumbs</th>
               </tr>
             </thead>
             <tbody>
-              <!-- NAME rows: all 12 columns active -->
+              <!-- NAME rows: full width (12 active columns) -->
               <tr>
                 <td class="side-group" rowspan="4">Name</td>
                 <td class="row-label">Bubbles</td>
@@ -214,7 +222,7 @@
                 <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
               </tr>
 
-              <!-- SNACK rows: only Time + Snack active -->
+              <!-- SNACK rows: only Time + Snack active (step in) -->
               <tr>
                 <td class="side-group" rowspan="4">Snack</td>
                 <td class="row-label">Worms</td>
@@ -241,7 +249,7 @@
                 <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
               </tr>
 
-              <!-- TIME rows: only Snack active -->
+              <!-- TIME rows: only Snack active (step in again) -->
               <tr>
                 <td class="side-group" rowspan="4">Time</td>
                 <td class="row-label">1:07</td>
@@ -288,6 +296,7 @@
   </div>
 
   <script>
+    // click cells: blank → ✓ → ✗
     function cycleCell(td) {
       const current = td.textContent.trim();
       if (current === "") {
