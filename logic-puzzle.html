@@ -192,14 +192,22 @@
       background: #111827;
       color: #ffffff;
       font-weight: 500;
+      transition: transform 0.05s ease, box-shadow 0.1s ease, opacity 0.1s ease;
     }
     .btn.secondary {
       background: #e5e7eb;
       color: #111827;
     }
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      opacity: 0.95;
+    }
     .btn:disabled {
       opacity: 0.6;
       cursor: default;
+      box-shadow: none;
+      transform: none;
     }
 
     .feedback {
@@ -246,20 +254,20 @@
               <tr>
                 <th colspan="2"></th>
                 <!-- Species -->
-                <th class="top-item boundary-left">Minnow</th>
-                <th class="top-item">Trout</th>
-                <th class="top-item">Stickleback</th>
-                <th class="top-item">Sucker</th>
+                <th class="top-item boundary-left" data-col-group="Species">Minnow</th>
+                <th class="top-item" data-col-group="Species">Trout</th>
+                <th class="top-item" data-col-group="Species">Stickleback</th>
+                <th class="top-item" data-col-group="Species">Sucker</th>
                 <!-- Time -->
-                <th class="top-item boundary-left">1:07</th>
-                <th class="top-item">1:46</th>
-                <th class="top-item">1:12</th>
-                <th class="top-item">2:01</th>
+                <th class="top-item boundary-left" data-col-group="Time">1:07</th>
+                <th class="top-item" data-col-group="Time">1:46</th>
+                <th class="top-item" data-col-group="Time">1:12</th>
+                <th class="top-item" data-col-group="Time">2:01</th>
                 <!-- Snack -->
-                <th class="top-item boundary-left">Worms</th>
-                <th class="top-item">Algae</th>
-                <th class="top-item">Insects</th>
-                <th class="top-item">Crumbs</th>
+                <th class="top-item boundary-left" data-col-group="Snack">Worms</th>
+                <th class="top-item" data-col-group="Snack">Algae</th>
+                <th class="top-item" data-col-group="Snack">Insects</th>
+                <th class="top-item" data-col-group="Snack">Crumbs</th>
               </tr>
             </thead>
             <tbody>
@@ -461,32 +469,17 @@
     const checkBtn = document.getElementById("check-btn");
     const revealBtn = document.getElementById("reveal-btn");
 
-    // Build column metadata (which group + item each column represents)
+    // Build column metadata based on second header row
     const colMeta = [];
     (function buildColMeta() {
-      const headRows = table.tHead.rows;
-      const groupRow = headRows[0];
-      const itemRow  = headRows[1];
-
+      const headerRow = table.tHead.rows[1]; // the row with Minnow/Trout/etc.
       let colIndex = 0;
-      // First row: group names
-      for (const cell of groupRow.cells) {
+      for (const cell of headerRow.cells) {
         const span = cell.colSpan || 1;
-        const groupName = cell.textContent.trim() || null;
-        for (let k = 0; k < span; k++) {
-          colMeta[colIndex] = { group: groupName, item: null };
-          colIndex++;
-        }
-      }
-
-      // Second row: item labels
-      colIndex = 0;
-      for (const cell of itemRow.cells) {
-        const span = cell.colSpan || 1;
+        const group = cell.dataset.colGroup || null;
         const label = cell.textContent.trim() || null;
         for (let k = 0; k < span; k++) {
-          if (!colMeta[colIndex]) colMeta[colIndex] = { group: null, item: null };
-          colMeta[colIndex].item = label;
+          colMeta[colIndex] = { group, item: label };
           colIndex++;
         }
       }
@@ -503,47 +496,52 @@
     }
 
     function makeKey(rowGroup, rowLabel, colGroup, colLabel) {
-      return rowGroup + "|" + rowLabel + "|" + colGroup + "|" + colLabel;
+      return `${rowGroup}|${rowLabel}|${colGroup}|${colLabel}`;
     }
 
-    // Correct solution pairs (all the green cells in your key)
-    const SOLUTION_TRUE = new Set([
+    // === EDIT SOLUTION HERE ===
+    // Each entry is one "green" true relationship in your key.
+    const solutionPairs = [
       // Name vs Species
-      makeKey("Name","Bubbles","Species","Minnow"),
-      makeKey("Name","Nemo","Species","Sucker"),
-      makeKey("Name","Goldie","Species","Trout"),
-      makeKey("Name","Bruce","Species","Stickleback"),
+      { rowGroup: "Name", rowLabel: "Bubbles", colGroup: "Species", colLabel: "Minnow" },
+      { rowGroup: "Name", rowLabel: "Nemo",    colGroup: "Species", colLabel: "Sucker" },
+      { rowGroup: "Name", rowLabel: "Goldie",  colGroup: "Species", colLabel: "Trout" },
+      { rowGroup: "Name", rowLabel: "Bruce",   colGroup: "Species", colLabel: "Stickleback" },
 
       // Name vs Time
-      makeKey("Name","Bubbles","Time","1:46"),
-      makeKey("Name","Nemo","Time","2:01"),
-      makeKey("Name","Goldie","Time","1:07"),
-      makeKey("Name","Bruce","Time","1:12"),
+      { rowGroup: "Name", rowLabel: "Bubbles", colGroup: "Time", colLabel: "1:46" },
+      { rowGroup: "Name", rowLabel: "Nemo",    colGroup: "Time", colLabel: "2:01" },
+      { rowGroup: "Name", rowLabel: "Goldie",  colGroup: "Time", colLabel: "1:07" },
+      { rowGroup: "Name", rowLabel: "Bruce",   colGroup: "Time", colLabel: "1:12" },
 
       // Name vs Snack
-      makeKey("Name","Bubbles","Snack","Insects"),
-      makeKey("Name","Nemo","Snack","Algae"),
-      makeKey("Name","Goldie","Snack","Crumbs"),
-      makeKey("Name","Bruce","Snack","Worms"),
+      { rowGroup: "Name", rowLabel: "Bubbles", colGroup: "Snack", colLabel: "Insects" },
+      { rowGroup: "Name", rowLabel: "Nemo",    colGroup: "Snack", colLabel: "Algae" },
+      { rowGroup: "Name", rowLabel: "Goldie",  colGroup: "Snack", colLabel: "Crumbs" },
+      { rowGroup: "Name", rowLabel: "Bruce",   colGroup: "Snack", colLabel: "Worms" },
 
       // Snack vs Species
-      makeKey("Snack","Worms","Species","Stickleback"),
-      makeKey("Snack","Algae","Species","Sucker"),
-      makeKey("Snack","Insects","Species","Minnow"),
-      makeKey("Snack","Crumbs","Species","Trout"),
+      { rowGroup: "Snack", rowLabel: "Worms",   colGroup: "Species", colLabel: "Stickleback" },
+      { rowGroup: "Snack", rowLabel: "Algae",   colGroup: "Species", colLabel: "Sucker" },
+      { rowGroup: "Snack", rowLabel: "Insects", colGroup: "Species", colLabel: "Minnow" },
+      { rowGroup: "Snack", rowLabel: "Crumbs",  colGroup: "Species", colLabel: "Trout" },
 
       // Snack vs Time
-      makeKey("Snack","Worms","Time","1:12"),
-      makeKey("Snack","Algae","Time","2:01"),
-      makeKey("Snack","Insects","Time","1:46"),
-      makeKey("Snack","Crumbs","Time","1:07"),
+      { rowGroup: "Snack", rowLabel: "Worms",   colGroup: "Time", colLabel: "1:12" },
+      { rowGroup: "Snack", rowLabel: "Algae",   colGroup: "Time", colLabel: "2:01" },
+      { rowGroup: "Snack", rowLabel: "Insects", colGroup: "Time", colLabel: "1:46" },
+      { rowGroup: "Snack", rowLabel: "Crumbs",  colGroup: "Time", colLabel: "1:07" },
 
       // Time vs Species
-      makeKey("Time","1:07","Species","Trout"),
-      makeKey("Time","1:46","Species","Minnow"),
-      makeKey("Time","1:12","Species","Stickleback"),
-      makeKey("Time","2:01","Species","Sucker")
-    ]);
+      { rowGroup: "Time", rowLabel: "1:07", colGroup: "Species", colLabel: "Trout" },
+      { rowGroup: "Time", rowLabel: "1:46", colGroup: "Species", colLabel: "Minnow" },
+      { rowGroup: "Time", rowLabel: "1:12", colGroup: "Species", colLabel: "Stickleback" },
+      { rowGroup: "Time", rowLabel: "2:01", colGroup: "Species", colLabel: "Sucker" }
+    ];
+    // Turn that into a fast lookup set
+    const SOLUTION_TRUE = new Set(
+      solutionPairs.map(p => makeKey(p.rowGroup, p.rowLabel, p.colGroup, p.colLabel))
+    );
 
     function setFeedback(text, type) {
       feedbackEl.textContent = text;
@@ -580,6 +578,8 @@
       const totalNeeded = SOLUTION_TRUE.size;
 
       forEachLogicCell((cell, rowGroup, rowLabel, colGroup, colLabel) => {
+        if (!colGroup || !colLabel) return; // skip any odd cells
+
         const k = makeKey(rowGroup, rowLabel, colGroup, colLabel);
         const isCorrect = SOLUTION_TRUE.has(k);
         const mark = cell.textContent.trim();
@@ -605,6 +605,7 @@
 
     function revealSolution() {
       forEachLogicCell((cell, rowGroup, rowLabel, colGroup, colLabel) => {
+        if (!colGroup || !colLabel) return;
         const k = makeKey(rowGroup, rowLabel, colGroup, colLabel);
         if (SOLUTION_TRUE.has(k)) {
           cell.textContent = "✓";
