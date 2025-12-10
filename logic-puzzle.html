@@ -163,7 +163,7 @@
 
     /* Vertical thicker lines for category boundaries using explicit classes */
     .boundary-left {
-      border-left-width: 2.5px !important;
+      border-left-width: 2px !important;
     }
 
     /* Horizontal thicker lines where Name→Snack and Snack→Time blocks begin */
@@ -173,7 +173,49 @@
     .logic-table tbody tr:nth-child(5) td,
     .logic-table tbody tr:nth-child(9) th,
     .logic-table tbody tr:nth-child(9) td {
-      border-top-width: 2.5px;
+      border-top-width: 2px;
+    }
+
+    /* Buttons + feedback */
+    .button-row {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      background: #111827;
+      color: #ffffff;
+      font-weight: 500;
+    }
+    .btn.secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .feedback {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      min-height: 1.4em;
+    }
+    .feedback.error {
+      color: #b91c1c;
+    }
+    .feedback.success {
+      color: #15803d;
+    }
+
+    .solution-highlight {
+      background: #bbf7d0; /* light green */
     }
   </style>
 </head>
@@ -183,7 +225,7 @@
     <div class="subtitle">
       Use the clues to match each fish's name with their species, snack, and arrival time.
     </div>
-    <div class="byline">By Rachel Khoddam · Staff · rkhoddam@dailycal.org</div>
+    <div class="byline">By Rachel Khoddami · Staff · rkhoddam@dailycal.org</div>
 
     <div class="legend">
       Click a cell to cycle between blank → ✓ → ✗. Use ✓ for a definite match and ✗ for
@@ -203,17 +245,17 @@
               </tr>
               <tr>
                 <th colspan="2"></th>
-                <!-- first species column -->
+                <!-- Species -->
                 <th class="top-item boundary-left">Minnow</th>
                 <th class="top-item">Trout</th>
                 <th class="top-item">Stickleback</th>
                 <th class="top-item">Sucker</th>
-                <!-- first time column -->
+                <!-- Time -->
                 <th class="top-item boundary-left">1:07</th>
                 <th class="top-item">1:46</th>
                 <th class="top-item">1:12</th>
                 <th class="top-item">2:01</th>
-                <!-- first snack column -->
+                <!-- Snack -->
                 <th class="top-item boundary-left">Worms</th>
                 <th class="top-item">Algae</th>
                 <th class="top-item">Insects</th>
@@ -221,21 +263,21 @@
               </tr>
             </thead>
             <tbody>
-              <!-- NAME block: full width -->
+              <!-- NAME block -->
               <tr>
                 <td class="side-group" rowspan="4">Name</td>
                 <td class="row-label">Bubbles</td>
-                <!-- Species (4) -->
+                <!-- Species -->
                 <td class="logic-cell boundary-left"></td>
                 <td class="logic-cell"></td>
                 <td class="logic-cell"></td>
                 <td class="logic-cell"></td>
-                <!-- Time (4) -->
+                <!-- Time -->
                 <td class="logic-cell boundary-left"></td>
                 <td class="logic-cell"></td>
                 <td class="logic-cell"></td>
                 <td class="logic-cell"></td>
-                <!-- Snack (4) -->
+                <!-- Snack -->
                 <td class="logic-cell boundary-left"></td>
                 <td class="logic-cell"></td>
                 <td class="logic-cell"></td>
@@ -243,17 +285,14 @@
               </tr>
               <tr>
                 <td class="row-label">Nemo</td>
-                <!-- Species -->
                 <td class="logic-cell boundary-left"></td>
                 <td class="logic-cell"></td>
                 <td class="logic-cell"></td>
                 <td class="logic-cell"></td>
-                <!-- Time -->
                 <td class="logic-cell boundary-left"></td>
                 <td class="logic-cell"></td>
                 <td class="logic-cell"></td>
                 <td class="logic-cell"></td>
-                <!-- Snack -->
                 <td class="logic-cell boundary-left"></td>
                 <td class="logic-cell"></td>
                 <td class="logic-cell"></td>
@@ -261,17 +300,14 @@
               </tr>
               <tr>
                 <td class="row-label">Goldie</td>
-                <!-- Species -->
                 <td class="logic-cell boundary-left"></td>
                 <td class="logic-cell"></td>
                 <td class="logic-cell"></td>
                 <td class="logic-cell"></td>
-                <!-- Time -->
                 <td class="logic-cell boundary-left"></td>
                 <td class="logic-cell"></td>
                 <td class="logic-cell"></td>
                 <td class="logic-cell"></td>
-                <!-- Snack -->
                 <td class="logic-cell boundary-left"></td>
                 <td class="logic-cell"></td>
                 <td class="logic-cell"></td>
@@ -279,6 +315,24 @@
               </tr>
               <tr>
                 <td class="row-label">Bruce</td>
+                <td class="logic-cell boundary-left"></td>
+                <td class="logic-cell"></td>
+                <td class="logic-cell"></td>
+                <td class="logic-cell"></td>
+                <td class="logic-cell boundary-left"></td>
+                <td class="logic-cell"></td>
+                <td class="logic-cell"></td>
+                <td class="logic-cell"></td>
+                <td class="logic-cell boundary-left"></td>
+                <td class="logic-cell"></td>
+                <td class="logic-cell"></td>
+                <td class="logic-cell"></td>
+              </tr>
+
+              <!-- SNACK block -->
+              <tr>
+                <td class="side-group" rowspan="4">Snack</td>
+                <td class="row-label">Worms</td>
                 <!-- Species -->
                 <td class="logic-cell boundary-left"></td>
                 <td class="logic-cell"></td>
@@ -289,28 +343,7 @@
                 <td class="logic-cell"></td>
                 <td class="logic-cell"></td>
                 <td class="logic-cell"></td>
-                <!-- Snack -->
-                <td class="logic-cell boundary-left"></td>
-                <td class="logic-cell"></td>
-                <td class="logic-cell"></td>
-                <td class="logic-cell"></td>
-              </tr>
-
-              <!-- SNACK block: Species + Time active; Snack area is one tall blank cell (rowspan=4) -->
-              <tr>
-                <td class="side-group" rowspan="4">Snack</td>
-                <td class="row-label">Worms</td>
-                <!-- Species (4) -->
-                <td class="logic-cell boundary-left"></td>
-                <td class="logic-cell"></td>
-                <td class="logic-cell"></td>
-                <td class="logic-cell"></td>
-                <!-- Time (4) -->
-                <td class="logic-cell boundary-left"></td>
-                <td class="logic-cell"></td>
-                <td class="logic-cell"></td>
-                <td class="logic-cell"></td>
-                <!-- Snack blank region, merged across 4 rows -->
+                <!-- Snack (blank area) -->
                 <td class="inactive-cell" colspan="4" rowspan="4"></td>
               </tr>
               <tr>
@@ -347,16 +380,16 @@
                 <td class="logic-cell"></td>
               </tr>
 
-              <!-- TIME block: Species active only; Time+Snack merged into one tall blank region -->
+              <!-- TIME block -->
               <tr>
                 <td class="side-group" rowspan="4">Time</td>
                 <td class="row-label">1:07</td>
-                <!-- Species (4) -->
+                <!-- Species -->
                 <td class="logic-cell boundary-left"></td>
                 <td class="logic-cell"></td>
                 <td class="logic-cell"></td>
                 <td class="logic-cell"></td>
-                <!-- Time+Snack blank region, merged across 4 rows and 8 columns -->
+                <!-- Time+Snack blank region -->
                 <td class="inactive-cell" colspan="8" rowspan="4"></td>
               </tr>
               <tr>
@@ -383,6 +416,12 @@
             </tbody>
           </table>
         </div>
+
+        <div class="button-row">
+          <button id="check-btn" class="btn">Check answers</button>
+          <button id="reveal-btn" class="btn secondary">Reveal solution</button>
+        </div>
+        <div id="feedback" class="feedback"></div>
       </div>
 
       <aside class="clue-area">
@@ -401,7 +440,7 @@
   </div>
 
   <script>
-    // Clickable cells: blank → ✓ → ✗
+    // Toggle cells: blank → ✓ → ✗
     function cycleCell(td) {
       const current = td.textContent.trim();
       if (current === "") {
@@ -416,6 +455,170 @@
     document.querySelectorAll(".logic-cell").forEach(td => {
       td.addEventListener("click", () => cycleCell(td));
     });
+
+    const table = document.querySelector(".logic-table");
+    const feedbackEl = document.getElementById("feedback");
+    const checkBtn = document.getElementById("check-btn");
+    const revealBtn = document.getElementById("reveal-btn");
+
+    // Build column metadata (which group + item each column represents)
+    const colMeta = [];
+    (function buildColMeta() {
+      const headRows = table.tHead.rows;
+      const groupRow = headRows[0];
+      const itemRow  = headRows[1];
+
+      let colIndex = 0;
+      // First row: group names
+      for (const cell of groupRow.cells) {
+        const span = cell.colSpan || 1;
+        const groupName = cell.textContent.trim() || null;
+        for (let k = 0; k < span; k++) {
+          colMeta[colIndex] = { group: groupName, item: null };
+          colIndex++;
+        }
+      }
+
+      // Second row: item labels
+      colIndex = 0;
+      for (const cell of itemRow.cells) {
+        const span = cell.colSpan || 1;
+        const label = cell.textContent.trim() || null;
+        for (let k = 0; k < span; k++) {
+          if (!colMeta[colIndex]) colMeta[colIndex] = { group: null, item: null };
+          colMeta[colIndex].item = label;
+          colIndex++;
+        }
+      }
+    })();
+
+    function getRowGroup(row) {
+      let r = row;
+      while (r) {
+        const sg = r.querySelector(".side-group");
+        if (sg) return sg.textContent.trim();
+        r = r.previousElementSibling;
+      }
+      return null;
+    }
+
+    function makeKey(rowGroup, rowLabel, colGroup, colLabel) {
+      return rowGroup + "|" + rowLabel + "|" + colGroup + "|" + colLabel;
+    }
+
+    // Correct solution pairs (all the green cells in your key)
+    const SOLUTION_TRUE = new Set([
+      // Name vs Species
+      makeKey("Name","Bubbles","Species","Minnow"),
+      makeKey("Name","Nemo","Species","Sucker"),
+      makeKey("Name","Goldie","Species","Trout"),
+      makeKey("Name","Bruce","Species","Stickleback"),
+
+      // Name vs Time
+      makeKey("Name","Bubbles","Time","1:46"),
+      makeKey("Name","Nemo","Time","2:01"),
+      makeKey("Name","Goldie","Time","1:07"),
+      makeKey("Name","Bruce","Time","1:12"),
+
+      // Name vs Snack
+      makeKey("Name","Bubbles","Snack","Insects"),
+      makeKey("Name","Nemo","Snack","Algae"),
+      makeKey("Name","Goldie","Snack","Crumbs"),
+      makeKey("Name","Bruce","Snack","Worms"),
+
+      // Snack vs Species
+      makeKey("Snack","Worms","Species","Stickleback"),
+      makeKey("Snack","Algae","Species","Sucker"),
+      makeKey("Snack","Insects","Species","Minnow"),
+      makeKey("Snack","Crumbs","Species","Trout"),
+
+      // Snack vs Time
+      makeKey("Snack","Worms","Time","1:12"),
+      makeKey("Snack","Algae","Time","2:01"),
+      makeKey("Snack","Insects","Time","1:46"),
+      makeKey("Snack","Crumbs","Time","1:07"),
+
+      // Time vs Species
+      makeKey("Time","1:07","Species","Trout"),
+      makeKey("Time","1:46","Species","Minnow"),
+      makeKey("Time","1:12","Species","Stickleback"),
+      makeKey("Time","2:01","Species","Sucker")
+    ]);
+
+    function setFeedback(text, type) {
+      feedbackEl.textContent = text;
+      feedbackEl.className = "feedback" + (type ? " " + type : "");
+    }
+
+    function forEachLogicCell(callback) {
+      const bodyRows = table.tBodies[0].rows;
+      for (const row of bodyRows) {
+        const rowLabelEl = row.querySelector(".row-label");
+        if (!rowLabelEl) continue;
+        const rowLabel = rowLabelEl.textContent.trim();
+        const rowGroup = getRowGroup(row);
+
+        let colIndex = 0;
+        for (const cell of row.cells) {
+          const span = cell.colSpan || 1;
+
+          if (cell.classList.contains("logic-cell")) {
+            const meta = colMeta[colIndex] || { group: null, item: null };
+            const colGroup = meta.group;
+            const colLabel = meta.item;
+            callback(cell, rowGroup, rowLabel, colGroup, colLabel);
+          }
+
+          colIndex += span;
+        }
+      }
+    }
+
+    function checkAnswers() {
+      let allCorrect = true;
+      let correctMarked = 0;
+      const totalNeeded = SOLUTION_TRUE.size;
+
+      forEachLogicCell((cell, rowGroup, rowLabel, colGroup, colLabel) => {
+        const k = makeKey(rowGroup, rowLabel, colGroup, colLabel);
+        const isCorrect = SOLUTION_TRUE.has(k);
+        const mark = cell.textContent.trim();
+
+        if (mark === "✓") {
+          if (isCorrect) {
+            correctMarked++;
+          } else {
+            allCorrect = false; // ✓ in a wrong place
+          }
+        } else if (isCorrect) {
+          // a correct cell is missing its ✓
+          allCorrect = false;
+        }
+      });
+
+      if (allCorrect && correctMarked === totalNeeded) {
+        setFeedback("Nice! Your grid matches the solution.", "success");
+      } else {
+        setFeedback("Something's off — your current grid doesn't match the solution yet.", "error");
+      }
+    }
+
+    function revealSolution() {
+      forEachLogicCell((cell, rowGroup, rowLabel, colGroup, colLabel) => {
+        const k = makeKey(rowGroup, rowLabel, colGroup, colLabel);
+        if (SOLUTION_TRUE.has(k)) {
+          cell.textContent = "✓";
+          cell.classList.add("solution-highlight");
+        } else {
+          cell.textContent = "";
+          cell.classList.remove("solution-highlight");
+        }
+      });
+      setFeedback("Solution revealed.", "success");
+    }
+
+    checkBtn.addEventListener("click", checkAnswers);
+    revealBtn.addEventListener("click", revealSolution);
   </script>
 </body>
 </html>
