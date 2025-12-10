@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Cal-nections —— The Daily Californian</title>
+  <title>CAL-nections</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     :root {
@@ -226,7 +226,8 @@
       tiles: shuffle([...ALL_WORDS]),
       selectedIndices: [],
       solvedGroupIndices: new Set(),
-      strikes: 0
+      strikes: 0,
+      gameOver: false
     };
 
     const gridEl = document.getElementById("grid");
@@ -241,21 +242,29 @@
       gridEl.innerHTML = "";
       state.tiles.forEach((tile, index) => {
         const isSolved = state.solvedGroupIndices.has(tile.groupIndex);
-        const btn = document.createElement("button");
-        btn.className = "tile" +
-          (state.selectedIndices.includes(index) ? " selected" : "") +
-          (isSolved ? " disabled" : "");
-        btn.textContent = tile.word;
-        btn.disabled = isSolved;
-        btn.addEventListener("click", () => onTileClick(index));
-        gridEl.appendChild(btn);
-      });
+        const isSelected = state.selectedIndices.includes(index);
+        const isDisabled = isSolved || state.gameOver;
 
-      submitBtn.disabled = state.selectedIndices.length !== 4;
-      clearBtn.disabled = state.selectedIndices.length === 0;
-      strikesEl.textContent = state.strikes.toString();
-      groupsSolvedEl.textContent = state.solvedGroupIndices.size.toString();
-    }
+        const btn = document.createElement("button");
+        btn.className =
+          "tile" +
+          (isSelected ? " selected" : "") +
+          (isDisabled ? " disabled" : "");
+        btn.textContent = tile.word;
+        btn.disabled = isDisabled;
+
+        if (!isDisabled) {
+          btn.addEventListener("click", () => onTileClick(index));
+        }
+
+    gridEl.appendChild(btn);
+  });
+
+  submitBtn.disabled = state.selectedIndices.length !== 4 || state.gameOver;
+  clearBtn.disabled = state.selectedIndices.length === 0 || state.gameOver;
+  strikesEl.textContent = state.strikes.toString();
+  groupsSolvedEl.textContent = state.solvedGroupIndices.size.toString();
+}
 
     function onTileClick(index) {
       if (state.selectedIndices.includes(index)) {
@@ -294,22 +303,26 @@
 
         state.selectedIndices = [];
         renderGrid();
-      } else {
-        state.strikes++;
-        setMessage("Nope, those four don't form a group.", "error");
-        if (state.strikes >= 4) {
-          setMessage("Game over. You've reached 4 strikes.", "error");
-          submitBtn.disabled = true;
-          const buttons = document.querySelectorAll(".tile");
-          buttons.forEach(btn => (btn.disabled = true));
+      } } else {
+          state.strikes++;
+          setMessage("Nope, those four don't form a group.", "error");
+
+          if (state.strikes >= 4) {
+            state.gameOver = true;
+            revealAllGroupsOnFail();
+            setMessage(
+              "Game over. You've reached 4 strikes. Here are the solutions:",
+              "error"
+          );
         }
-        state.selectedIndices = [];
-        renderGrid();
-      }
+
+  state.selectedIndices = [];
+  renderGrid();
+}
     }
 
-    function revealSolvedGroup(groupIndex) {
-      const group = PUZZLE[groupIndex];
+   function revealSolvedGroup(groupIndex) {
+     const group = PUZZLE[groupIndex];
       const groupRow = document.createElement("div");
       groupRow.className = "group-row group-color-" + groupIndex;
       const wordsSpan = document.createElement("span");
@@ -321,6 +334,17 @@
       groupRow.appendChild(wordsSpan);
       groupRow.appendChild(catSpan);
       solvedGroupsEl.appendChild(groupRow);
+    }
+
+    // NEW: reveal all remaining groups when the player fails
+    function revealAllGroupsOnFail() {
+      for (let i = 0; i < PUZZLE.length; i++) {
+        if (!state.solvedGroupIndices.has(i)) {
+          state.solvedGroupIndices.add(i);
+          revealSolvedGroup(i);
+        }
+      }
+      groupsSolvedEl.textContent = state.solvedGroupIndices.size.toString();
     }
 
     submitBtn.addEventListener("click", checkSelection);
