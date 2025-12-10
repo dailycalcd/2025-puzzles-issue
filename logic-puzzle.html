@@ -99,13 +99,13 @@
       letter-spacing: 0.06em;
     }
 
-    /* vertical item labels along the top, like the print grid */
+    /* Vertical top item labels with extra room */
     .top-item {
       writing-mode: vertical-rl;
       text-orientation: mixed;
-      padding: 10px 4px;     /* more padding */
-      height: 72px;          /* taller cells so text fits */
-      white-space: nowrap;   /* don’t wrap the vertical text */
+      padding: 10px 4px;
+      height: 72px;
+      white-space: nowrap;
       font-weight: 400;
     }
 
@@ -134,7 +134,7 @@
       background: #e5f0ff;
     }
 
-    /* “missing” squares that create the stepped shape */
+    /* “Missing” squares to form the stepped shape */
     .inactive-cell {
       background: transparent;
       border: none;
@@ -170,6 +170,7 @@
     </div>
 
     <div class="logic-layout">
+      <!-- LEFT: stepped grid -->
       <div class="grid-area">
         <div class="logic-table-wrapper">
           <table class="logic-table">
@@ -197,7 +198,7 @@
               </tr>
             </thead>
             <tbody>
-              <!-- NAME rows: full width (12 active columns) -->
+              <!-- NAME rows: all 12 columns active -->
               <tr>
                 <td class="side-group" rowspan="4">Name</td>
                 <td class="row-label">Bubbles</td>
@@ -224,11 +225,13 @@
                 <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
               </tr>
 
-              <!-- SNACK rows: only Time + Snack active (step in) -->
+              <!-- SNACK rows: only Time + Snack active (stepped in) -->
               <tr>
                 <td class="side-group" rowspan="4">Snack</td>
                 <td class="row-label">Worms</td>
+                <!-- Species: inactive -->
                 <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
+                <!-- Time + Snack: active -->
                 <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
                 <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
               </tr>
@@ -251,16 +254,15 @@
                 <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
               </tr>
 
-              <!-- TIME rows: only Snack active (step in again) -->
-              <!-- TIME rows: only the middle block active (no bottom-right boxes) -->
+              <!-- TIME rows: only Time block active, bottom-right blank (no repeat category grid) -->
               <tr>
                 <td class="side-group" rowspan="4">Time</td>
                 <td class="row-label">1:07</td>
-                <!-- Species columns: inactive -->
+                <!-- Species: inactive -->
                 <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
                 <!-- Time block: active -->
                 <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <!-- Snack block: inactive (this removes the bottom-right grid) -->
+                <!-- Snack block: inactive (clears bottom-right) -->
                 <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
               </tr>
               <tr>
@@ -286,6 +288,7 @@
         </div>
       </div>
 
+      <!-- RIGHT: clues -->
       <aside class="clue-area">
         <div class="clue-title">Clues</div>
         <ol class="clues">
@@ -302,7 +305,7 @@
   </div>
 
   <script>
-    // click cells: blank → ✓ → ✗
+    // Clickable cells: blank → ✓ → ✗
     function cycleCell(td) {
       const current = td.textContent.trim();
       if (current === "") {
