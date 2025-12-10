@@ -2,323 +2,94 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Logic puzzle</title>
+  <title>Logic puzzle TEST</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    :root {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
     body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       margin: 0;
-      padding: 16px;
+      padding: 24px;
       background: #f3f4f6;
       display: flex;
       justify-content: center;
     }
-    .game-container {
-      max-width: 900px;
-      width: 100%;
+    .container {
       background: #ffffff;
-      border-radius: 12px;
       padding: 16px;
+      border-radius: 12px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      max-width: 480px;
+      width: 100%;
       box-sizing: border-box;
     }
     h1 {
-      font-size: 1.6rem;
-      margin: 0 0 4px;
+      margin: 0 0 8px;
+      font-size: 1.4rem;
     }
-    .subtitle {
-      font-size: 0.9rem;
-      color: #6b7280;
-      margin-bottom: 4px;
+    p {
+      margin: 0 0 12px;
+      color: #4b5563;
+      font-size: 0.95rem;
     }
-    .byline {
-      font-size: 0.85rem;
-      color: #6b7280;
-      letter-spacing: 0.03em;
-      margin-bottom: 12px;
-    }
-
-    .legend {
-      font-size: 0.8rem;
-      color: #6b7280;
-      margin-bottom: 10px;
-    }
-
-    .logic-layout {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-    .grid-area {
-      flex: 1 1 520px;
-      min-width: 0;
-    }
-    .clue-area {
-      flex: 0 0 260px;
-      max-width: 260px;
-      font-size: 0.9rem;
-    }
-    @media (max-width: 800px) {
-      .clue-area {
-        flex: 1 1 100%;
-        max-width: none;
-      }
-    }
-
-    .logic-table-wrapper {
-      overflow-x: auto;
-      background: #ffffff;
-    }
-
-    table.logic-table {
-      width: 100%;
+    table {
       border-collapse: collapse;
+      width: 100%;
       table-layout: fixed;
+      margin-top: 8px;
     }
-    table.logic-table th,
-    table.logic-table td {
-      text-align: center;
-      font-size: 0.8rem;
-      padding: 4px;
-      height: 28px;
-      box-sizing: border-box;
+    th, td {
       border: 1px solid #111827;
+      padding: 8px;
+      text-align: center;
+      font-size: 0.9rem;
+      box-sizing: border-box;
     }
-    table.logic-table th {
-      background: #f3f4f6;
+    th {
+      background: #e5e7eb;
       font-weight: 600;
     }
-
-    .top-group {
-      background: #a3d147;
-      color: #111827;
-      font-weight: 700;
-      font-size: 0.8rem;
-      letter-spacing: 0.06em;
-    }
-
-    /* Vertical top item labels with extra room */
-    .top-item {
-      writing-mode: vertical-rl;
-      text-orientation: mixed;
-      padding: 10px 4px;
-      height: 72px;
-      white-space: nowrap;
-      font-weight: 400;
-    }
-
-    .side-group {
-      background: #a3d147;
-      color: #111827;
-      font-weight: 700;
-      writing-mode: vertical-rl;
-      text-orientation: mixed;
-      padding: 4px 2px;
-      width: 24px;
-    }
-
-    .row-label {
-      background: #d9e8a6;
-      font-weight: 600;
-      text-align: left;
-      padding-left: 6px;
-    }
-
-    .logic-cell {
+    td.cell {
       cursor: pointer;
       user-select: none;
     }
-    .logic-cell:hover {
-      background: #e5f0ff;
-    }
-
-    /* “Missing” squares to form the stepped shape */
-    .inactive-cell {
-      background: transparent;
-      border: none;
-      cursor: default;
-    }
-
-    .clue-title {
-      font-weight: 600;
-      margin-bottom: 4px;
-      font-size: 0.9rem;
-      letter-spacing: 0.04em;
-    }
-    ol.clues {
-      margin: 0;
-      padding-left: 18px;
-    }
-    ol.clues li {
-      margin-bottom: 6px;
+    td.cell:hover {
+      background: #e0f2fe;
     }
   </style>
 </head>
 <body>
-  <div class="game-container">
-    <h1>Logic puzzle</h1>
-    <div class="subtitle">
-      Use the clues to match each fish's name with their species, snack, and arrival time.
-    </div>
-    <div class="byline">By Rachel Khoddami · Staff · rkhoddam@dailycal.org</div>
+  <div class="container">
+    <h1>Logic puzzle TEST page</h1>
+    <p>
+      If you see a 3×3 grid below and clicking the white cells toggles an <strong>X</strong>,
+      then HTML + JavaScript are working correctly.
+    </p>
 
-    <div class="legend">
-      Click a cell to cycle between blank → ✓ → ✗. Use ✓ for a definite match and ✗ for
-      impossible combinations.
-    </div>
-
-    <div class="logic-layout">
-      <!-- LEFT: stepped grid -->
-      <div class="grid-area">
-        <div class="logic-table-wrapper">
-          <table class="logic-table">
-            <thead>
-              <tr>
-                <th colspan="2"></th>
-                <th class="top-group" colspan="4">Species</th>
-                <th class="top-group" colspan="4">Time</th>
-                <th class="top-group" colspan="4">Snack</th>
-              </tr>
-              <tr>
-                <th colspan="2"></th>
-                <th class="top-item">Minnow</th>
-                <th class="top-item">Trout</th>
-                <th class="top-item">Stickleback</th>
-                <th class="top-item">Sucker</th>
-                <th class="top-item">1:07</th>
-                <th class="top-item">1:46</th>
-                <th class="top-item">1:12</th>
-                <th class="top-item">2:01</th>
-                <th class="top-item">Worms</th>
-                <th class="top-item">Algae</th>
-                <th class="top-item">Insects</th>
-                <th class="top-item">Crumbs</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- NAME rows: all 12 columns active -->
-              <tr>
-                <td class="side-group" rowspan="4">Name</td>
-                <td class="row-label">Bubbles</td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-              </tr>
-              <tr>
-                <td class="row-label">Nemo</td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-              </tr>
-              <tr>
-                <td class="row-label">Goldie</td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-              </tr>
-              <tr>
-                <td class="row-label">Bruce</td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-              </tr>
-
-              <!-- SNACK rows: only Time + Snack active (stepped in) -->
-              <tr>
-                <td class="side-group" rowspan="4">Snack</td>
-                <td class="row-label">Worms</td>
-                <!-- Species: inactive -->
-                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
-                <!-- Time + Snack: active -->
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-              </tr>
-              <tr>
-                <td class="row-label">Algae</td>
-                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-              </tr>
-              <tr>
-                <td class="row-label">Insects</td>
-                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-              </tr>
-              <tr>
-                <td class="row-label">Crumbs</td>
-                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-              </tr>
-
-              <!-- TIME rows: only Time block active, bottom-right blank (no repeat category grid) -->
-              <tr>
-                <td class="side-group" rowspan="4">Time</td>
-                <td class="row-label">1:07</td>
-                <!-- Species: inactive -->
-                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
-                <!-- Time block: active -->
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <!-- Snack block: inactive (clears bottom-right) -->
-                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
-              </tr>
-              <tr>
-                <td class="row-label">1:46</td>
-                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
-              </tr>
-              <tr>
-                <td class="row-label">1:12</td>
-                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
-              </tr>
-              <tr>
-                <td class="row-label">2:01</td>
-                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- RIGHT: clues -->
-      <aside class="clue-area">
-        <div class="clue-title">Clues</div>
-        <ol class="clues">
-          <li>The fish that arrived at 1:07 ate crumbs.</li>
-          <li>The trout arrived before the minnow.</li>
-          <li>Bruce is the stickleback and he ate worms.</li>
-          <li>The fish that ate algae arrived last.</li>
-          <li>Nemo is not the trout and did not eat insects.</li>
-          <li>Bubbles arrived after Goldie but before Nemo.</li>
-          <li>The fish that ate insects arrived at 1:46.</li>
-        </ol>
-      </aside>
-    </div>
+    <table>
+      <tr>
+        <th></th>
+        <th>Col 1</th>
+        <th>Col 2</th>
+      </tr>
+      <tr>
+        <th>Row A</th>
+        <td class="cell"></td>
+        <td class="cell"></td>
+      </tr>
+      <tr>
+        <th>Row B</th>
+        <td class="cell"></td>
+        <td class="cell"></td>
+      </tr>
+    </table>
   </div>
 
   <script>
-    // Clickable cells: blank → ✓ → ✗
-    function cycleCell(td) {
-      const current = td.textContent.trim();
-      if (current === "") {
-        td.textContent = "✓";
-      } else if (current === "✓") {
-        td.textContent = "✗";
-      } else {
-        td.textContent = "";
-      }
-    }
-
-    document.querySelectorAll(".logic-cell").forEach(td => {
-      td.addEventListener("click", () => cycleCell(td));
+    // Simple click test: blank ↔ X
+    document.querySelectorAll("td.cell").forEach(td => {
+      td.addEventListener("click", () => {
+        td.textContent = td.textContent.trim() === "X" ? "" : "X";
+      });
     });
   </script>
 </body>
