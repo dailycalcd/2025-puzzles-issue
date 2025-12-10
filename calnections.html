@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Cal-nections Puzzle</title>
+  <title>Cal-nections —— </title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     :root {
@@ -51,6 +51,21 @@
     }
     .tile {
       border-radius: 8px;
+      border-radius: 0;
+      clip-path: polygon(
+        8% 0,
+        92% 0,
+        100% 8%,
+        100% 92%,
+        92% 100%,
+        8% 100%,
+        0 92%,
+        0 8%
+      );
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       padding: 10px 6px;
       text-align: center;
       font-size: 0.9rem;
@@ -145,7 +160,7 @@
 <body>
   <div class="game-container">
     <h1>Cal-nections</h1>
-    <div class="subtitle">Create groups of four.</div>
+    <div class="subtitle">Create groups of four!</div>
     <div class="status-bar">
       <div>Groups solved: <span id="groups-solved">0</span>/4</div>
       <div class="strikes">Strikes: <span id="strikes">0</span>/4</div>
@@ -153,10 +168,13 @@
     <div id="solved-groups"></div>
     <div class="grid" id="grid"></div>
     <div class="button-row">
-      <button id="submit-btn" class="btn" disabled>Submit Group</button>
+      <button id="submit-btn" class="btn" disabled>Submit</button>
       <button id="clear-btn" class="btn secondary">Clear</button>
     </div>
     <div id="message" class="message info"></div>
+    <div class="footer name">
+      Inspired by the New York Times' Connections &copy;
+    </div>
   </div>
 
   <script>
