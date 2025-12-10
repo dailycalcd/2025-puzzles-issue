@@ -55,16 +55,21 @@
     .grid-wrapper {
       overflow-x: auto;
       max-width: 100%;
+      display: flex;
+      justify-content: center;   /* center the grid block inside the container */
     }
-
+    
     .imm-grid {
-      max-width: 560px;           /* controls grid width (and box size) */
-      margin: 0 auto;             /* centers the grid */
+      max-width: 560px;          /* controls overall grid/square size */
+      margin: 0;                 /* flex centering handles this */
       display: grid;
-      grid-template-columns: 72px repeat(3, 1fr); /* first column = row headers */
+      grid-template-columns: 64px repeat(3, 1fr); /* 64px header, 3 equal square columns */
       grid-template-rows: 48px repeat(3, auto);
-      gap: 8px;
-      align-items: stretch;
+      column-gap: 8px;
+      row-gap: 8px;
+    
+      /* shift left by half of the header width so the 3×3 grid is centered */
+      transform: translateX(-32px);  /* 64px / 2 = 32 */
     }
 
     .corner-cell {
@@ -87,16 +92,17 @@
     .row-header {
       writing-mode: vertical-rl;
       text-orientation: mixed;
-      font-size: 0.9rem;          /* slightly bigger */
+      font-size: 0.9rem;
       font-weight: 700;
       text-align: center;
       letter-spacing: 0.08em;
       display: flex;
       align-items: center;
-      justify-content: flex-end;  /* push text closer to the grid */
-      padding-right: 2px;         /* tiny nudge toward the squares */
+      justify-content: flex-end;  /* push text toward the squares */
+      padding-right: 0;          /* no extra padding */
+      margin-right: -4px;        /* overlap the gap a bit so it's close */
       text-transform: uppercase;
-      transform: rotate(180deg);  /* base of letters faces the grid */
+      transform: rotate(180deg); /* base of letters faces the grid */
       transform-origin: center;
     }
 
