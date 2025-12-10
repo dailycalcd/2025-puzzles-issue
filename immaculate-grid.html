@@ -79,7 +79,7 @@
     .row-header {
       writing-mode: vertical-rl;
       text-orientation: mixed;
-      font-size: 0.9rem;         /* slightly bigger */
+      font-size: 0.9rem;
       font-weight: 700;
       text-align: center;
       letter-spacing: 0.08em;
@@ -87,6 +87,10 @@
       align-items: center;
       justify-content: center;
       text-transform: uppercase;
+    
+      /* flip so the base of the letters faces the grid */
+      transform: rotate(180deg);
+      transform-origin: center;
     }
 
     .cell {
