@@ -15,6 +15,13 @@
       display: flex;
       justify-content: center;
     }
+    .byline {
+      font-size: 0.8rem;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
     .game-container {
       max-width: 480px;
       width: 100%;
@@ -45,28 +52,32 @@
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(4, 80px);
-      justify-content: center;                
+      grid-template-columns: repeat(4, minmax(0, 1fr)); /* 4 equal columns */
       gap: 8px;
       margin-bottom: 12px;
     }
     .tile {
-     aspect-ratio: 1 / 1;       /* keeps them square */
-      display: flex;
-      align-items: center;
-      justify-content: center;
+       border-radius: 8px;
 
-      padding: 4px;              /* less padding = less height */
-      font-size: 0.8rem;         /* slightly smaller text */
+        /* RECTANGLES: remove aspect-ratio and just give a fixed-ish height */
+        height: 56px;              /* adjust up/down to taste */
 
-      text-align: center;
-      cursor: pointer;
-      user-select: none;
-      border: 1px solid #d1d5db;
-       background: #e5e7eb;
-      transition: transform 0.05s ease, box-shadow 0.05s ease,
-              background 0.1s ease, border-color 0.1s ease;
-      word-wrap: break-word;
+        /* center the text */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 4px 6px;
+        text-align: center;
+        font-size: 0.85rem;
+
+        cursor: pointer;
+        user-select: none;
+        border: 1px solid #d1d5db;
+        background: #e5e7eb;
+        transition: transform 0.05s ease, box-shadow 0.05s ease,
+                background 0.1s ease, border-color 0.1s ease;
+        word-wrap: break-word;
     }
     .tile:hover {
       transform: translateY(-1px);
@@ -160,6 +171,7 @@
   <div class="game-container">
     <h1>Cal-nections</h1>
     <div class="subtitle">Create groups of four!</div>
+    <div class="byline">By Sharon Che | Staff | sche@dailycal.org</div>
     <div class="status-bar">
       <div>Groups solved: <span id="groups-solved">0</span>/4</div>
       <div class="strikes">Strikes: <span id="strikes">0</span>/4</div>
