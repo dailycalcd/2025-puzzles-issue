@@ -83,7 +83,8 @@
       text-align: center;
       font-size: 0.8rem;
       padding: 4px;
-      height: 28px;
+      min-height: 28px;     /* minimum, but can grow */
+      height: auto;         /* allow cell to expand to fit content */
       box-sizing: border-box;
       border: 1px solid #111827;
     }
@@ -103,18 +104,19 @@
     .top-item {
       writing-mode: vertical-rl;
       text-orientation: mixed;
-      padding: 18px 8px;   /* more padding all around */
-      height: 110px;       /* taller so long words don't crowd */
+      padding: 12px 8px;  /* comfy padding */
       white-space: nowrap;
       font-weight: 400;
+      height: auto;       /* NO fixed height */
     }
 
     .row-label {
       background: #d9e8a6;
       font-weight: 600;
       text-align: left;
-      padding: 6px 10px;   /* more left/right padding */
-      min-height: 32px;    /* a bit taller rows */
+      padding: 6px 10px;
+      min-height: 28px;   /* can grow if needed */
+      height: auto;
       box-sizing: border-box;
     }
     
@@ -124,9 +126,10 @@
       font-weight: 700;
       writing-mode: vertical-rl;
       text-orientation: mixed;
-      padding: 8px 4px;    /* more padding so text isn't cramped */
-      width: 28px;         /* slightly wider strip */
+      padding: 8px 4px;
+      width: 28px;
       box-sizing: border-box;
+      height: auto;       /* let this stretch to match */
     }
 
     .logic-cell {
