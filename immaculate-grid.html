@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Name the players! – Immaculate grid</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 16px;
+      background: #f3f4f6;
+      display: flex;
+      justify-content: center;
+    }
+    .game-container {
+      max-width: 900px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      box-sizing: border-box;
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin: 0 0 4px;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+    .byline {
+      font-size: 0.85rem;
+      color: #6b7280;
+      letter-spacing: 0.03em;
+      margin-bottom: 12px;
+    }
+    .legend {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-bottom: 10px;
+    }
+
+    .grid-wrapper {
+      overflow-x: auto;
+    }
+
+    .imm-grid {
+      display: grid;
+      grid-template-columns: 96px repeat(3, 1fr);
+      grid-template-rows: 48px repeat(3, 1fr);
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .corner-cell {
+      grid-row: 1 / 2;
+      grid-column: 1 / 2;
+    }
+
+    .col-header {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 0.06em;
+      padding: 0 4px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      text-transform: uppercase;
+    }
+
+    .row-header {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 0.08em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+    }
+
+    .cell {
+      border-radius: 4px;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .shade-1 { background: #f28a2b; }
+    .shade-2 { background: #f5ad7e; }
+
+    .answer-input {
+      width: 100%;
+      border: none;
+      background: rgba(255,255,255,0.9);
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-size: 0.85rem;
+      box-sizing: border-box;
+      text-align: center;
+    }
+    .answer-input:focus {
+      outline: 2px solid #111827;
+      outline-offset: 1px;
+    }
+
+    .button-row {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      background: #111827;
+      color: #ffffff;
+      font-weight: 500;
+      transition: transform 0.05s ease, box-shadow 0.1s ease, opacity 0.1s ease;
+    }
+    .btn.secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      opacity: 0.95;
+    }
+
+    .answers-panel {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 0.85rem;
+    }
+    .answers-panel.hidden {
+      display: none;
+    }
+    .answers-panel h2 {
+      font-size: 0.95rem;
+      margin: 0 0 6px;
+    }
+    table.answers-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    table.answers-table th,
+    table.answers-table td {
+      border: 1px solid #d1d5db;
+      padding: 6px;
+      vertical-align: top;
+      text-align: left;
+      font-size: 0.8rem;
+    }
+    table.answers-table th {
+      background: #f9fafb;
+      font-weight: 600;
+    }
+    .answers-table .row-label {
+      width: 28%;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>Name the players!</h1>
+    <div class="subtitle">An immaculate grid-inspired puzzle</div>
+    <div class="byline">By Kyle Ngo · Senior Staff · kngo@dailycal.org</div>
+
+    <div class="legend">
+      Type a Cal athlete in each square who fits <strong>both</strong> the row and column.
+      When you're stuck, click “Reveal potential answers” to see some sample valid names.
+    </div>
+
+    <div class="grid-wrapper">
+      <div class="imm-grid">
+        <!-- top-left corner -->
+        <div class="corner-cell"></div>
+
+        <!-- column headers -->
+        <div class="col-header">All-conference</div>
+        <div class="col-header">Played professionally</div>
+        <div class="col-header">Spent 4+ years at Cal</div>
+
+        <!-- row 1: Cal football -->
+        <div class="row-header">Cal football</div>
+        <div class="cell shade-1">
+          <input class="answer-input" type="text"
+                 placeholder="Type a name"
+                 data-row="cal-football" data-col="all-conference" />
+        </div>
+        <div class="cell shade-2">
+          <input class="answer-input" type="text"
+                 placeholder="Type a name"
+                 data-row="cal-football" data-col="pro" />
+        </div>
+        <div class="cell shade-1">
+          <input class="answer-input" type="text"
+                 placeholder="Type a name"
+                 data-row="cal-football" data-col="four-plus" />
+        </div>
+
+        <!-- row 2: Olympic medalist -->
+        <div class="row-header">Olympic medalist</div>
+        <div class="cell shade-2">
+          <input class="answer-input" type="text"
+                 placeholder="Type a name"
+                 data-row="olympic-medalist" data-col="all-conference" />
+        </div>
+        <div class="cell shade-1">
+          <input class="answer-input" type="text"
+                 placeholder="Type a name"
+                 data-row="olympic-medalist" data-col="pro" />
+        </div>
+        <div class="cell shade-2">
+          <input class="answer-input" type="text"
+                 placeholder="Type a name"
+                 data-row="olympic-medalist" data-col="four-plus" />
+        </div>
+
+        <!-- row 3: Cal basketball -->
+        <div class="row-header">Cal men’s / women’s basketball</div>
+        <div class="cell shade-1">
+          <input class="answer-input" type="text"
+                 placeholder="Type a name"
+                 data-row="cal-basketball" data-col="all-conference" />
+        </div>
+        <div class="cell shade-2">
+          <input class="answer-input" type="text"
+                 placeholder="Type a name"
+                 data-row="cal-basketball" data-col="pro" />
+        </div>
+        <div class="cell shade-1">
+          <input class="answer-input" type="text"
+                 placeholder="Type a name"
+                 data-row="cal-basketball" data-col="four-plus" />
+        </div>
+      </div>
+    </div>
+
+    <div class="button-row">
+      <button id="reveal-btn" class="btn secondary">Reveal potential answers</button>
+    </div>
+
+    <div id="answers-panel" class="answers-panel hidden">
+      <h2>Potential answers</h2>
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>All-conference</th>
+            <th>Played professionally</th>
+            <th>Spent 4+ years at Cal</th>
+          </tr>
+        </thead>
+        <tbody id="answers-body">
+          <!-- JS will fill this -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Data structure for potential answers – EDIT HERE IF YOU WANT TO CHANGE NAMES
+    const ANSWER_DATA = {
+      rows: [
+        { id: "cal-football", label: "Cal football" },
+        { id: "olympic-medalist", label: "Olympic medalist" },
+        { id: "cal-basketball", label: "Cal men’s or women’s basketball" }
+      ],
+      cols: [
+        { id: "all-conference", label: "All-conference" },
+        { id: "pro",            label: "Played professionally" },
+        { id: "four-plus",      label: "Spent 4+ years at Cal" }
+      ],
+      grid: {
+        // Cal football
+        "cal-football|all-conference": ["DeSean Jackson", "J.J. Arrington"],
+        "cal-football|pro":           ["Aaron Rodgers", "Marshawn Lynch"],
+        "cal-football|four-plus":     ["Alex Mack", "Lorenzo Alexander"],
+
+        // Olympic medalist
+        "olympic-medalist|all-conference": ["Natalie Coughlin", "Nathan Adrian"],
+        "olympic-medalist|pro":           ["Alex Morgan", "Elsie Windes"],
+        "olympic-medalist|four-plus":     ["Jack Alexy", "Erin Cafaro"],
+
+        // Cal men’s / women’s basketball
+        "cal-basketball|all-conference": ["Leon Powe", "Devanei Hampton"],
+        "cal-basketball|pro":           ["Ryan Anderson", "Ashley Walker"],
+        "cal-basketball|four-plus":     ["Jerome Randle", "Alexis Gray-Lawson"]
+      }
+    };
+
+    const answersPanel = document.getElementById("answers-panel");
+    const answersBody = document.getElementById("answers-body");
+    const revealBtn = document.getElementById("reveal-btn");
+
+    function renderAnswersTable() {
+      answersBody.innerHTML = "";
+
+      ANSWER_DATA.rows.forEach(row => {
+        const tr = document.createElement("tr");
+
+        const rowTh = document.createElement("th");
+        rowTh.textContent = row.label;
+        rowTh.className = "row-label";
+        tr.appendChild(rowTh);
+
+        ANSWER_DATA.cols.forEach(col => {
+          const td = document.createElement("td");
+          const key = `${row.id}|${col.id}`;
+          const names = ANSWER_DATA.grid[key] || [];
+          td.textContent = names.join(", ");
+          tr.appendChild(td);
+        });
+
+        answersBody.appendChild(tr);
+      });
+    }
+
+    revealBtn.addEventListener("click", () => {
+      if (answersPanel.classList.contains("hidden")) {
+        renderAnswersTable();
+        answersPanel.classList.remove("hidden");
+        revealBtn.textContent = "Hide potential answers";
+      } else {
+        answersPanel.classList.add("hidden");
+        revealBtn.textContent = "Reveal potential answers";
+      }
+    });
+  </script>
+</body>
+</html>
