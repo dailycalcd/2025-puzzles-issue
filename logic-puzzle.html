@@ -99,7 +99,7 @@
       letter-spacing: 0.06em;
     }
 
-    /* Vertical top item labels with extra room */
+    /* vertical header labels with extra room */
     .top-item {
       writing-mode: vertical-rl;
       text-orientation: mixed;
@@ -134,7 +134,7 @@
       background: #e5f0ff;
     }
 
-    /* “Missing” squares to form the stepped shape */
+    /* visually empty squares (no duplicate subheader pairs) */
     .inactive-cell {
       background: transparent;
       border: none;
@@ -170,7 +170,6 @@
     </div>
 
     <div class="logic-layout">
-      <!-- LEFT: stepped grid -->
       <div class="grid-area">
         <div class="logic-table-wrapper">
           <table class="logic-table">
@@ -198,7 +197,7 @@
               </tr>
             </thead>
             <tbody>
-              <!-- NAME rows: all 12 columns active -->
+              <!-- NAME rows: all columns active -->
               <tr>
                 <td class="side-group" rowspan="4">Name</td>
                 <td class="row-label">Bubbles</td>
@@ -225,62 +224,63 @@
                 <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
               </tr>
 
-              <!-- SNACK rows: only Time + Snack active (stepped in) -->
+              <!-- SNACK rows: Species + Time active, Snack blank -->
               <tr>
                 <td class="side-group" rowspan="4">Snack</td>
                 <td class="row-label">Worms</td>
-                <!-- Species: inactive -->
+                <!-- Species subgrid -->
+                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
+                <!-- Time subgrid -->
+                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
+                <!-- Snack subgrid (blank) -->
                 <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
-                <!-- Time + Snack: active -->
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
               </tr>
               <tr>
                 <td class="row-label">Algae</td>
+                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
+                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
                 <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
               </tr>
               <tr>
                 <td class="row-label">Insects</td>
+                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
+                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
                 <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
               </tr>
               <tr>
                 <td class="row-label">Crumbs</td>
+                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
+                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
                 <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
               </tr>
 
-              <!-- TIME rows: only Time block active, bottom-right blank (no repeat category grid) -->
+              <!-- TIME rows: Species active only (bottom-right empty) -->
               <tr>
                 <td class="side-group" rowspan="4">Time</td>
                 <td class="row-label">1:07</td>
-                <!-- Species: inactive -->
-                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
-                <!-- Time block: active -->
+                <!-- Species subgrid -->
                 <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
-                <!-- Snack block: inactive (clears bottom-right) -->
+                <!-- Time subgrid (blank) -->
+                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
+                <!-- Snack subgrid (blank) -->
                 <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
               </tr>
               <tr>
                 <td class="row-label">1:46</td>
-                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
                 <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
+                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
                 <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
               </tr>
               <tr>
                 <td class="row-label">1:12</td>
-                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
                 <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
+                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
                 <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
               </tr>
               <tr>
                 <td class="row-label">2:01</td>
-                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
                 <td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td><td class="logic-cell"></td>
+                <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
                 <td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td><td class="inactive-cell"></td>
               </tr>
             </tbody>
@@ -288,7 +288,6 @@
         </div>
       </div>
 
-      <!-- RIGHT: clues -->
       <aside class="clue-area">
         <div class="clue-title">Clues</div>
         <ol class="clues">
