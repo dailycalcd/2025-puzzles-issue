@@ -448,178 +448,186 @@
   </div>
 
   <script>
-    // Toggle cells: blank → ✓ → ✗
-    function cycleCell(td) {
-      const current = td.textContent.trim();
-      if (current === "") {
-        td.textContent = "✓";
-      } else if (current === "✓") {
-        td.textContent = "✗";
-      } else {
-        td.textContent = "";
+  // Toggle cells: blank → ✓ → ✗
+  function cycleCell(td) {
+    const current = td.textContent.trim();
+    if (current === "") {
+      td.textContent = "✓";
+    } else if (current === "✓") {
+      td.textContent = "✗";
+    } else {
+      td.textContent = "";
+    }
+  }
+
+  document.querySelectorAll(".logic-cell").forEach(td => {
+    td.addEventListener("click", () => cycleCell(td));
+  });
+
+  const table = document.querySelector(".logic-table");
+  const feedbackEl = document.getElementById("feedback");
+  const checkBtn = document.getElementById("check-btn");
+  const revealBtn = document.getElementById("reveal-btn");
+
+  // Build column metadata based on second header row
+  const colMeta = [];
+  (function buildColMeta() {
+    const headerRow = table.tHead.rows[1]; // the row with Minnow/Trout/etc.
+    let colIndex = 0;
+    for (const cell of headerRow.cells) {
+      const span = cell.colSpan || 1;
+      const group = cell.dataset.colGroup || null;
+      const label = cell.textContent.trim() || null;
+      for (let k = 0; k < span; k++) {
+        colMeta[colIndex] = { group, item: label };
+        colIndex++;
       }
     }
+  })();
 
-    document.querySelectorAll(".logic-cell").forEach(td => {
-      td.addEventListener("click", () => cycleCell(td));
+  function getRowGroup(row) {
+    // climb upward until we find the row that actually contains the side-group cell
+    let r = row;
+    while (r) {
+      const sg = r.querySelector(".side-group");
+      if (sg) return sg.textContent.trim();
+      r = r.previousElementSibling;
+    }
+    return null;
+  }
+
+  function makeKey(rowGroup, rowLabel, colGroup, colLabel) {
+    return `${rowGroup}|${rowLabel}|${colGroup}|${colLabel}`;
+  }
+
+  // === EDIT SOLUTION HERE ===
+  // Each entry is one "true" relationship in your key.
+  const solutionPairs = [
+    // Name vs Species
+    { rowGroup: "Name", rowLabel: "Bubbles", colGroup: "Species", colLabel: "Minnow" },
+    { rowGroup: "Name", rowLabel: "Nemo",    colGroup: "Species", colLabel: "Sucker" },
+    { rowGroup: "Name", rowLabel: "Goldie",  colGroup: "Species", colLabel: "Trout" },
+    { rowGroup: "Name", rowLabel: "Bruce",   colGroup: "Species", colLabel: "Stickleback" },
+
+    // Name vs Time
+    { rowGroup: "Name", rowLabel: "Bubbles", colGroup: "Time", colLabel: "1:46" },
+    { rowGroup: "Name", rowLabel: "Nemo",    colGroup: "Time", colLabel: "2:01" },
+    { rowGroup: "Name", rowLabel: "Goldie",  colGroup: "Time", colLabel: "1:07" },
+    { rowGroup: "Name", rowLabel: "Bruce",   colGroup: "Time", colLabel: "1:12" },
+
+    // Name vs Snack
+    { rowGroup: "Name", rowLabel: "Bubbles", colGroup: "Snack", colLabel: "Insects" },
+    { rowGroup: "Name", rowLabel: "Nemo",    colGroup: "Snack", colLabel: "Algae" },
+    { rowGroup: "Name", rowLabel: "Goldie",  colGroup: "Snack", colLabel: "Crumbs" },
+    { rowGroup: "Name", rowLabel: "Bruce",   colGroup: "Snack", colLabel: "Worms" },
+
+    // Snack vs Species
+    { rowGroup: "Snack", rowLabel: "Worms",   colGroup: "Species", colLabel: "Stickleback" },
+    { rowGroup: "Snack", rowLabel: "Algae",   colGroup: "Species", colLabel: "Sucker" },
+    { rowGroup: "Snack", rowLabel: "Insects", colGroup: "Species", colLabel: "Minnow" },
+    { rowGroup: "Snack", rowLabel: "Crumbs",  colGroup: "Species", colLabel: "Trout" },
+
+    // Snack vs Time
+    { rowGroup: "Snack", rowLabel: "Worms",   colGroup: "Time", colLabel: "1:12" },
+    { rowGroup: "Snack", rowLabel: "Algae",   colGroup: "Time", colLabel: "2:01" },
+    { rowGroup: "Snack", rowLabel: "Insects", colGroup: "Time", colLabel: "1:46" },
+    { rowGroup: "Snack", rowLabel: "Crumbs",  colGroup: "Time", colLabel: "1:07" },
+
+    // Time vs Species
+    { rowGroup: "Time", rowLabel: "1:07", colGroup: "Species", colLabel: "Trout" },
+    { rowGroup: "Time", rowLabel: "1:46", colGroup: "Species", colLabel: "Minnow" },
+    { rowGroup: "Time", rowLabel: "1:12", colGroup: "Species", colLabel: "Stickleback" },
+    { rowGroup: "Time", rowLabel: "2:01", colGroup: "Species", colLabel: "Sucker" }
+  ];
+
+  // Fast lookup set
+  const SOLUTION_TRUE = new Set(
+    solutionPairs.map(p => makeKey(p.rowGroup, p.rowLabel, p.colGroup, p.colLabel))
+  );
+
+  function setFeedback(text, type) {
+    feedbackEl.textContent = text;
+    feedbackEl.className = "feedback" + (type ? " " + type : "");
+  }
+
+  // Iterate over each logic cell with correct mapping to header columns
+  function forEachLogicCell(callback) {
+    const bodyRows = table.tBodies[0].rows;
+    for (const row of bodyRows) {
+      const rowLabelEl = row.querySelector(".row-label");
+      if (!rowLabelEl) continue;
+      const rowLabel = rowLabelEl.textContent.trim();
+      const rowGroup = getRowGroup(row);
+
+      // IMPORTANT FIX:
+      // rows that *don't* contain a side-group cell (because of rowspan)
+      // are missing the first column in the DOM, so we start at colIndex 1
+      const hasOwnSideGroup = !!row.querySelector(".side-group");
+      let colIndex = hasOwnSideGroup ? 0 : 1;
+
+      for (const cell of row.cells) {
+        const span = cell.colSpan || 1;
+
+        if (cell.classList.contains("logic-cell")) {
+          const meta = colMeta[colIndex] || { group: null, item: null };
+          const colGroup = meta.group;
+          const colLabel = meta.item;
+          callback(cell, rowGroup, rowLabel, colGroup, colLabel);
+        }
+
+        colIndex += span;
+      }
+    }
+  }
+
+  function checkAnswers() {
+    let allCorrect = true;
+    let correctMarked = 0;
+    const totalNeeded = SOLUTION_TRUE.size;
+
+    forEachLogicCell((cell, rowGroup, rowLabel, colGroup, colLabel) => {
+      if (!colGroup || !colLabel) return; // safety
+
+      const k = makeKey(rowGroup, rowLabel, colGroup, colLabel);
+      const isCorrect = SOLUTION_TRUE.has(k);
+      const mark = cell.textContent.trim();
+
+      if (mark === "✓") {
+        if (isCorrect) {
+          correctMarked++;
+        } else {
+          allCorrect = false; // ✓ in a wrong place
+        }
+      } else if (isCorrect) {
+        // a correct cell is missing its ✓
+        allCorrect = false;
+      }
     });
 
-    const table = document.querySelector(".logic-table");
-    const feedbackEl = document.getElementById("feedback");
-    const checkBtn = document.getElementById("check-btn");
-    const revealBtn = document.getElementById("reveal-btn");
-
-    // Build column metadata based on second header row
-    const colMeta = [];
-    (function buildColMeta() {
-      const headerRow = table.tHead.rows[1]; // the row with Minnow/Trout/etc.
-      let colIndex = 0;
-      for (const cell of headerRow.cells) {
-        const span = cell.colSpan || 1;
-        const group = cell.dataset.colGroup || null;
-        const label = cell.textContent.trim() || null;
-        for (let k = 0; k < span; k++) {
-          colMeta[colIndex] = { group, item: label };
-          colIndex++;
-        }
-      }
-    })();
-
-    function getRowGroup(row) {
-      let r = row;
-      while (r) {
-        const sg = r.querySelector(".side-group");
-        if (sg) return sg.textContent.trim();
-        r = r.previousElementSibling;
-      }
-      return null;
+    if (allCorrect && correctMarked === totalNeeded) {
+      setFeedback("Nice! Your grid matches the solution.", "success");
+    } else {
+      setFeedback("Something's off — your current grid doesn't match the solution yet.", "error");
     }
+  }
 
-    function makeKey(rowGroup, rowLabel, colGroup, colLabel) {
-      return `${rowGroup}|${rowLabel}|${colGroup}|${colLabel}`;
-    }
-
-    // === EDIT SOLUTION HERE ===
-    // Each entry is one "green" true relationship in your key.
-    const solutionPairs = [
-      // Name vs Species
-      { rowGroup: "Name", rowLabel: "Bubbles", colGroup: "Species", colLabel: "Minnow" },
-      { rowGroup: "Name", rowLabel: "Nemo",    colGroup: "Species", colLabel: "Sucker" },
-      { rowGroup: "Name", rowLabel: "Goldie",  colGroup: "Species", colLabel: "Trout" },
-      { rowGroup: "Name", rowLabel: "Bruce",   colGroup: "Species", colLabel: "Stickleback" },
-
-      // Name vs Time
-      { rowGroup: "Name", rowLabel: "Bubbles", colGroup: "Time", colLabel: "1:46" },
-      { rowGroup: "Name", rowLabel: "Nemo",    colGroup: "Time", colLabel: "2:01" },
-      { rowGroup: "Name", rowLabel: "Goldie",  colGroup: "Time", colLabel: "1:07" },
-      { rowGroup: "Name", rowLabel: "Bruce",   colGroup: "Time", colLabel: "1:12" },
-
-      // Name vs Snack
-      { rowGroup: "Name", rowLabel: "Bubbles", colGroup: "Snack", colLabel: "Insects" },
-      { rowGroup: "Name", rowLabel: "Nemo",    colGroup: "Snack", colLabel: "Algae" },
-      { rowGroup: "Name", rowLabel: "Goldie",  colGroup: "Snack", colLabel: "Crumbs" },
-      { rowGroup: "Name", rowLabel: "Bruce",   colGroup: "Snack", colLabel: "Worms" },
-
-      // Snack vs Species
-      { rowGroup: "Snack", rowLabel: "Worms",   colGroup: "Species", colLabel: "Stickleback" },
-      { rowGroup: "Snack", rowLabel: "Algae",   colGroup: "Species", colLabel: "Sucker" },
-      { rowGroup: "Snack", rowLabel: "Insects", colGroup: "Species", colLabel: "Minnow" },
-      { rowGroup: "Snack", rowLabel: "Crumbs",  colGroup: "Species", colLabel: "Trout" },
-
-      // Snack vs Time
-      { rowGroup: "Snack", rowLabel: "Worms",   colGroup: "Time", colLabel: "1:12" },
-      { rowGroup: "Snack", rowLabel: "Algae",   colGroup: "Time", colLabel: "2:01" },
-      { rowGroup: "Snack", rowLabel: "Insects", colGroup: "Time", colLabel: "1:46" },
-      { rowGroup: "Snack", rowLabel: "Crumbs",  colGroup: "Time", colLabel: "1:07" },
-
-      // Time vs Species
-      { rowGroup: "Time", rowLabel: "1:07", colGroup: "Species", colLabel: "Trout" },
-      { rowGroup: "Time", rowLabel: "1:46", colGroup: "Species", colLabel: "Minnow" },
-      { rowGroup: "Time", rowLabel: "1:12", colGroup: "Species", colLabel: "Stickleback" },
-      { rowGroup: "Time", rowLabel: "2:01", colGroup: "Species", colLabel: "Sucker" }
-    ];
-    // Turn that into a fast lookup set
-    const SOLUTION_TRUE = new Set(
-      solutionPairs.map(p => makeKey(p.rowGroup, p.rowLabel, p.colGroup, p.colLabel))
-    );
-
-    function setFeedback(text, type) {
-      feedbackEl.textContent = text;
-      feedbackEl.className = "feedback" + (type ? " " + type : "");
-    }
-
-    function forEachLogicCell(callback) {
-      const bodyRows = table.tBodies[0].rows;
-      for (const row of bodyRows) {
-        const rowLabelEl = row.querySelector(".row-label");
-        if (!rowLabelEl) continue;
-        const rowLabel = rowLabelEl.textContent.trim();
-        const rowGroup = getRowGroup(row);
-
-        let colIndex = 0;
-        for (const cell of row.cells) {
-          const span = cell.colSpan || 1;
-
-          if (cell.classList.contains("logic-cell")) {
-            const meta = colMeta[colIndex] || { group: null, item: null };
-            const colGroup = meta.group;
-            const colLabel = meta.item;
-            callback(cell, rowGroup, rowLabel, colGroup, colLabel);
-          }
-
-          colIndex += span;
-        }
-      }
-    }
-
-    function checkAnswers() {
-      let allCorrect = true;
-      let correctMarked = 0;
-      const totalNeeded = SOLUTION_TRUE.size;
-
-      forEachLogicCell((cell, rowGroup, rowLabel, colGroup, colLabel) => {
-        if (!colGroup || !colLabel) return; // skip any odd cells
-
-        const k = makeKey(rowGroup, rowLabel, colGroup, colLabel);
-        const isCorrect = SOLUTION_TRUE.has(k);
-        const mark = cell.textContent.trim();
-
-        if (mark === "✓") {
-          if (isCorrect) {
-            correctMarked++;
-          } else {
-            allCorrect = false; // ✓ in a wrong place
-          }
-        } else if (isCorrect) {
-          // a correct cell is missing its ✓
-          allCorrect = false;
-        }
-      });
-
-      if (allCorrect && correctMarked === totalNeeded) {
-        setFeedback("Nice! Your grid matches the solution.", "success");
+  function revealSolution() {
+    forEachLogicCell((cell, rowGroup, rowLabel, colGroup, colLabel) => {
+      if (!colGroup || !colLabel) return;
+      const k = makeKey(rowGroup, rowLabel, colGroup, colLabel);
+      if (SOLUTION_TRUE.has(k)) {
+        cell.textContent = "✓";
+        cell.classList.add("solution-highlight");
       } else {
-        setFeedback("Something's off — your current grid doesn't match the solution yet.", "error");
+        cell.textContent = "";
+        cell.classList.remove("solution-highlight");
       }
-    }
+    });
+    setFeedback("Solution revealed.", "success");
+  }
 
-    function revealSolution() {
-      forEachLogicCell((cell, rowGroup, rowLabel, colGroup, colLabel) => {
-        if (!colGroup || !colLabel) return;
-        const k = makeKey(rowGroup, rowLabel, colGroup, colLabel);
-        if (SOLUTION_TRUE.has(k)) {
-          cell.textContent = "✓";
-          cell.classList.add("solution-highlight");
-        } else {
-          cell.textContent = "";
-          cell.classList.remove("solution-highlight");
-        }
-      });
-      setFeedback("Solution revealed.", "success");
-    }
-
-    checkBtn.addEventListener("click", checkAnswers);
-    revealBtn.addEventListener("click", revealSolution);
-  </script>
+  checkBtn.addEventListener("click", checkAnswers);
+  revealBtn.addEventListener("click", revealSolution);
+</script>
 </body>
 </html>
