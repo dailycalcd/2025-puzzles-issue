@@ -59,18 +59,18 @@
       justify-content: center;   /* center the grid block inside the container */
     }
     
-    .imm-grid {
-      max-width: 560px;          /* controls overall grid/square size */
-      margin: 0;                 /* flex centering handles this */
-      display: grid;
-      grid-template-columns: 64px repeat(3, 1fr); /* 64px header, 3 equal square columns */
-      grid-template-rows: 48px repeat(3, auto);
-      column-gap: 8px;
-      row-gap: 8px;
-    
-      /* shift left by half of the header width so the 3×3 grid is centered */
-      transform: translateX(-32px);  /* 64px / 2 = 32 */
-    }
+     .imm-grid {
+        max-width: 560px;          /* controls overall grid/square size */
+        margin: 0;
+        display: grid;
+        grid-template-columns: 40px repeat(3, 1fr);  /* was 64px; much narrower header col */
+        grid-template-rows: 48px repeat(3, auto);
+        column-gap: 8px;
+        row-gap: 8px;
+      
+        /* shift left by half of the header width so the 3×3 grid is centered */
+        transform: translateX(-20px);  /* 40px / 2 = 20 */
+      }
 
     .corner-cell {
       grid-row: 1 / 2;
@@ -92,17 +92,15 @@
     .row-header {
       writing-mode: vertical-rl;
       text-orientation: mixed;
-      font-size: 0.9rem;
+      font-size: 0.8rem;          /* slightly smaller so it fits in 40px */
       font-weight: 700;
       text-align: center;
       letter-spacing: 0.08em;
       display: flex;
       align-items: center;
-      justify-content: flex-end;  /* push text toward the squares */
-      padding-right: 0;          /* no extra padding */
-      margin-right: -4px;        /* overlap the gap a bit so it's close */
+      justify-content: center;    /* center within the narrower strip */
       text-transform: uppercase;
-      transform: rotate(180deg); /* base of letters faces the grid */
+      transform: rotate(180deg);  /* base of letters faces the grid */
       transform-origin: center;
     }
 
