@@ -74,7 +74,8 @@
 
     table.logic-table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;  /* changed */
+      border-spacing: 0;          /* added */
       table-layout: fixed;
     }
     table.logic-table th,
@@ -135,7 +136,7 @@
 
     .inactive-cell {
       background: transparent;
-      border: none;
+      border: none !important;  /* force no border */
       cursor: default;
     }
 
