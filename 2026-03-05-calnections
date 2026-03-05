@@ -211,7 +211,7 @@
         words: ["10 THINGS I HATE ABOUT YOU", "WEST SIDE STORY", "OPHELIA", "THE LION KING"]
       },
       {
-        category: "FILMED ”AT UC BERKELEY”",
+        category: "”AT” UC BERKELEY",
         words: ["OPPENHEIMER", "THE GRADUATE", "ANT-MAN AND THE WASP", "MONSTERS UNIVERSITY"]
       }
     ];
